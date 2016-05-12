@@ -2,58 +2,45 @@ package main;
 
 import model.Luciernaga;
 
-import java.util.Arrays;
+import java.util.*;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Random;
 import java.util.Scanner;
 
 public class FireFly {
 
 	public static void main(String[] args) {
 		
-		//Entrada del problema		
+//Entrada del problema		
 		String operador1 = getOperador();
 		String operador2 = getOperador();
 		String resultado = getOperador();
 		
-		//Cantidad de elementos distintos
-		char[] todos = (operador1 + operador2 + resultado).toCharArray();
-/*		
-		HashMap<String,Integer> map = new HashMap<String,Integer>();
-		int i=0;
-		for(char unChar:todos){
-			map.put(( , i);
-			i++;
-		}
-		Iterator it = map.keySet().iterator();
-		while(it.hasNext()){
-		  Integer key = it.next();
-		  System.out.println("Clave: " + key + " -> Valor: " + map.get(key));
-		}
-**/		
+//Cantidad de letras distintas que contiene el problema criptoaritmetico
+		HashMap<Character, Integer> letras = getLetras(operador1, operador2, resultado);
+
+//Muestra todos los caracteres distintos ingresados
+	    //verLetras(letras);
+		    
+//Esto tiene que ir dentro de la generacion de la poblacion de luciernagas para poder inicializar a cada una
+		char[] vector = generador(letras);
 		
-		//Falta Generar el valor de las luciernagas de forma aleatoria	
-		Luciernaga[] swarm = new Luciernaga[50];
-		for (int h =0; h < swarm.length; h++) {
-			String nombre = "luciernaga" + h;
-			Luciernaga unaLuciernaga = new Luciernaga(nombre);
-			swarm[h] = unaLuciernaga;
-		}
+//Creación de la poblacion de luciernagas		
+		Luciernaga[] swarm = poblacion(3);
+
 		
-		//Comparar luciernagas
-/*		for (int i=0; i < swarm.length; i++){
+//Comparar luciernagas teniendo en cuenta el brillo y el atractivo de cada una
+		for (int i=0; i < swarm.length; i++){
 			for (int j=0; j < swarm.length; j++){
-				
 				if(swarm[i].atractivo(swarm[j])){
-					System.out.println("La luciernaga:" + i + " es mejor que la ljuciernaga:" + j);
-					//Mover Luciernagas
+					System.out.println("La luciernaga:" + i + " es mas brillante que la luciernaga:" + j);
+					System.out.println("La luciernaga:" + i + " se movio con respecto a la luciernaga:" + j);
 				}
-				
 			}
-		}*/
-		
+		}
 	}
 
+//Carga de Valores por Pantalla
 	public static String getOperador(){
 		
         System.out.println("Introducir un Operador");
@@ -63,4 +50,54 @@ public class FireFly {
 	
 	}
 	
+//Determinacion del dominio del problema ----> Cantidad de letras distintas que posee el problema criptoaritmetico
+	public static HashMap<Character, Integer> getLetras(String op1, String op2, String op3){
+		op1 = op1 + op2 + op3;
+	    HashMap<Character, Integer> caracteres = new HashMap<Character, Integer>();
+	    for ( int i = 0; i < op1.length(); ++i ){
+	        caracteres.put(op1.charAt(i), i);
+	    }
+	    return caracteres;
+	}
+	
+//Mostrar las distintas letras que conforman el problema	
+	public static void verLetras(HashMap<Character,Integer> caracteres){
+	    Iterator it = caracteres.entrySet().iterator();
+	    while (it.hasNext()) {
+	    	Map.Entry e = (Map.Entry)it.next();
+	    	System.out.println(e.getKey() + " " + e.getValue());
+	    }    
+	}
+//Mapeador de Caracteres con Numeros ----> Para generar la aleatoriedad de las luciernagas
+	public static char[] generador(HashMap<Character, Integer> checkSum){
+		char[] letras = new char[10];
+		Random valor = new Random();
+	    Iterator it = checkSum.entrySet().iterator();
+	    while (it.hasNext()) {
+	    	Map.Entry e = (Map.Entry)it.next();
+	    	System.out.println(e.getKey() + " " + e.getValue());
+			int valorcito = valor.nextInt(10);
+			letras[valorcito] = (char)e.getKey();
+	    }  		 
+		//Solo para ver como se fueron asignador las letras a las posiciones
+	    int i = 0;
+		for(char unChar:letras){
+			System.out.println(unChar + " " + i );
+			i = i + 1;
+		}
+		
+		return letras; 
+	}
+	
+//Generación de la Población de Luciernagas
+	public static Luciernaga[] poblacion(int habitantes){
+		Luciernaga[] enjambre = new Luciernaga[habitantes];
+		for (int h =0; h < enjambre.length; h++) {
+			String nombre = "luciernaga" + h;
+			Luciernaga unaLuciernaga = new Luciernaga(nombre);
+			enjambre[h] = unaLuciernaga;
+		}
+		return enjambre;
+	}
+
 }
