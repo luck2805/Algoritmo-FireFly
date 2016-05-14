@@ -16,7 +16,15 @@ public class FireFly {
 		String operador1 = getOperador();
 		String operador2 = getOperador();
 		String resultado = getOperador();
+
+		char[] sumando1 = operador1.toCharArray();
+		char[] sumando2 = operador2.toCharArray();
+		char[] total = resultado.toCharArray();
 		
+		sumando1 = reverso(sumando1);
+		sumando2 = reverso(sumando2);
+		total = reverso(total);
+				
 //Cantidad de letras distintas que contiene el problema criptoaritmetico
 		HashMap<Character, Integer> letras = getLetras(operador1, operador2, resultado);
 
@@ -30,9 +38,8 @@ public class FireFly {
 //Comparar luciernagas teniendo en cuenta el brillo y el atractivo de cada una
 		for (int i=0; i < swarm.length; i++){
 			for (int j=0; j < swarm.length; j++){
-				if(swarm[i].atractivo(swarm[j])){
-					System.out.println("La luciernaga:" + i + " es mas brillante que la luciernaga:" + j);
-					System.out.println("La luciernaga:" + i + " se movio con respecto a la luciernaga:" + j);
+				if(swarm[i].atractivo(swarm[j], sumando1, sumando2, total)){
+					//System.out.println("La luciernaga:" + i + " tiene un brillo de :" + swarm[i].intensidad(sumando1, sumando2, total));
 				}
 			}
 		}
@@ -88,6 +95,7 @@ public class FireFly {
 			mapeador.put(valorcito, (char)e.getKey());			
 	    }
 	    
+	    
 	    Iterator it2 = mapeador.entrySet().iterator();
 	    while (it2.hasNext()){
 	    	Map.Entry e2 = (Map.Entry)it2.next();
@@ -99,6 +107,7 @@ public class FireFly {
 			System.out.println(unChar + "-" + i );
 			i = i + 1;
 		}
+		
 		return letras; 
 	}
 	
@@ -108,10 +117,28 @@ public class FireFly {
 		for (int h =0; h < enjambre.length; h++) {
 			String nombre = "Luciernaga-" + h;
 			char[] vector = generador(letras);
-			Luciernaga unaLuciernaga = new Luciernaga(nombre,vector);
+			Luciernaga unaLuciernaga = new Luciernaga(nombre, convertidor(vector));
 			enjambre[h] = unaLuciernaga;
 		}
 		return enjambre;
+	}
+
+	public static char[] reverso(char[] unOperador){
+		for (int i = 0; i < unOperador.length / 2; i++) { 
+			char temp = unOperador[i];
+			unOperador[i] = unOperador[unOperador.length - 1 - i]; 
+			unOperador[unOperador.length - 1 - i] = temp; 
+		}
+
+		return unOperador;
+	}
+
+	public static ArrayList<Character> convertidor(char[] unVector){
+		ArrayList<Character> resultado = new ArrayList<Character>();
+		for (char unChar:unVector){
+			resultado.add(unChar);
+		}
+		return resultado;
 	}
 
 }
