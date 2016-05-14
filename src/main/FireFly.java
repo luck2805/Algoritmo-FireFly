@@ -1,6 +1,7 @@
 package main;
 
 import model.Luciernaga;
+import userInterface.Ventana;
 
 import java.util.*;
 import java.util.HashMap;
@@ -35,6 +36,12 @@ public class FireFly {
 				}
 			}
 		}
+		
+		Ventana ventana=new Ventana();
+		ventana.setBounds(500,250,300,250);
+		ventana.setVisible(true);
+		ventana.setResizable(false);
+		
 	}
 
 //Carga de Valores por Pantalla
@@ -89,7 +96,7 @@ public class FireFly {
 //Solo para ver como se fueron asignador las letras a las posiciones
 	    int i = 0;
 		for(char unChar:letras){
-			System.out.println(unChar + " " + i );
+			System.out.println(unChar + "-" + i );
 			i = i + 1;
 		}
 		return letras; 
@@ -99,8 +106,7 @@ public class FireFly {
 	public static Luciernaga[] poblacion(int habitantes, HashMap<Character, Integer> letras ){
 		Luciernaga[] enjambre = new Luciernaga[habitantes];
 		for (int h =0; h < enjambre.length; h++) {
-			String nombre = "luciernaga" + h;
-			//Esto tiene que ir dentro de la generacion de la poblacion de luciernagas para poder inicializar a cada una
+			String nombre = "Luciernaga-" + h;
 			char[] vector = generador(letras);
 			Luciernaga unaLuciernaga = new Luciernaga(nombre,vector);
 			enjambre[h] = unaLuciernaga;
