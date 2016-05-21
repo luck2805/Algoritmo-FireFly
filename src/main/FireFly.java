@@ -21,9 +21,9 @@ public class FireFly {
 		char[] sumando2 = operador2.toCharArray();
 		char[] total = resultado.toCharArray();
 		
-		sumando1 = reverso(sumando1);
-		sumando2 = reverso(sumando2);
-		total = reverso(total);
+		sumando1 = reverso(sumando1);	//char[]
+		sumando2 = reverso(sumando2);	//char[]
+		total = reverso(total);			//char[]
 				
 //Cantidad de letras distintas que contiene el problema criptoaritmetico
 		HashMap<Character, Integer> letras = getLetras(operador1, operador2, resultado);
@@ -32,33 +32,51 @@ public class FireFly {
 	    //verLetras(letras);
 		    		
 //Creación de la poblacion de luciernagas		
-		Luciernaga[] swarm = poblacion(3,letras);
+		Luciernaga[] swarm = poblacion(50,letras);
 
 		
 //Comparar luciernagas teniendo en cuenta el brillo y el atractivo de cada una
 		for (int i=0; i < swarm.length; i++){
 			for (int j=0; j < swarm.length; j++){
-				if(swarm[i].atractivo(swarm[j], sumando1, sumando2, total)){
-					//System.out.println("La luciernaga:" + i + " tiene un brillo de :" + swarm[i].intensidad(sumando1, sumando2, total));
+				if ((i!=j)&&(swarm[i].intensidad(sumando1, sumando2, total)!=0)){
+					if (swarm[i].atractivo(swarm[j], sumando1, sumando2, total)){
+						if(swarm[i].intensidad(sumando1, sumando2, total)>0){
+							//decrementar operadores
+						}else{
+						//decremento total
+						}
+					}else{
+						if(swarm[i].intensidad(sumando1, sumando2, total)>0){
+							//los mejores valores de los operadores de j le asigno a i
+						}else{
+							//los mejores valores de los resultados de j le asigno a i
+						}
+						
+					}
 				}
 			}
 		}
+
+//Mostrar el valor de todas las luciernagas al finalizar todo
+		for(int z = 0 ; z < swarm.length ; z++){
+			System.out.println(swarm[z].id);
+			System.out.println(swarm[z].intensidad(sumando1, sumando2, total));
+			verLetras(swarm[z].elementos);
+		}
 		
 		Ventana ventana=new Ventana();
-		ventana.setBounds(500,250,300,250);
+		ventana.setBounds(0,0,450,350);
 		ventana.setVisible(true);
 		ventana.setResizable(false);
 		
 	}
 
 //Carga de Valores por Pantalla
-	public static String getOperador(){
-		
+	public static String getOperador(){	
         System.out.println("Introducir un Operador");
         Scanner entradaEscaner = new Scanner(System.in);
         String entradaTeclado = entradaEscaner.nextLine().toUpperCase();
         return entradaTeclado;
-	
 	}
 	
 //Determinacion del dominio del problema ----> Cantidad de letras distintas que posee el problema criptoaritmetico
@@ -79,36 +97,24 @@ public class FireFly {
 	    	System.out.println(e.getKey() + " " + e.getValue());
 	    }    
 	}
+	
 //Mapeador de Caracteres con Numeros ----> Para generar la aleatoriedad de las luciernagas
-	public static char[] generador(HashMap<Character, Integer> checkSum){
-		HashMap<Integer, Character> mapeador = new HashMap<Integer,Character>();
-		char[] letras = new char[10];
+	public static HashMap<Character,Integer> generador(HashMap<Character, Integer> checkSum){
+		HashMap<Character, Integer> mapeador = new HashMap<Character,Integer>();
 		Random valor = new Random();
 	    Iterator it = checkSum.entrySet().iterator();
 	    System.out.println("Esta es una Luciernaga");
 	    while (it.hasNext()) {
 	    	Map.Entry e = (Map.Entry)it.next();
 			int valorcito = valor.nextInt(10);
-			while(mapeador.containsKey(valorcito)){
+			while(mapeador.containsValue(valorcito)){
 				valorcito = valor.nextInt(10);
 			}
-			mapeador.put(valorcito, (char)e.getKey());			
-	    }
-	    
-	    
-	    Iterator it2 = mapeador.entrySet().iterator();
-	    while (it2.hasNext()){
-	    	Map.Entry e2 = (Map.Entry)it2.next();
-	    	letras[(int)e2.getKey()] = (char)e2.getValue(); 
+			mapeador.put((char)e.getKey(), valorcito);			
 	    }
 //Solo para ver como se fueron asignador las letras a las posiciones
-	    int i = 0;
-		for(char unChar:letras){
-			System.out.println(unChar + "-" + i );
-			i = i + 1;
-		}
-		
-		return letras; 
+	    verLetras(mapeador);		
+		return mapeador; 
 	}
 	
 //Generación de la Población de Luciernagas
@@ -116,8 +122,7 @@ public class FireFly {
 		Luciernaga[] enjambre = new Luciernaga[habitantes];
 		for (int h =0; h < enjambre.length; h++) {
 			String nombre = "Luciernaga-" + h;
-			char[] vector = generador(letras);
-			Luciernaga unaLuciernaga = new Luciernaga(nombre, convertidor(vector));
+			Luciernaga unaLuciernaga = new Luciernaga(nombre, generador(letras));
 			enjambre[h] = unaLuciernaga;
 		}
 		return enjambre;

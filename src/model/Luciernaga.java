@@ -2,16 +2,17 @@ package model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Random;
 
 import interfaces.IComportamiento;
 
 public class Luciernaga implements IComportamiento{
 
 	public String id;
-	public ArrayList<Character> elementos;
+	public HashMap<Character, Integer> elementos;
 	public Luciernaga(){}
 	
-	public Luciernaga(String unId, ArrayList<Character> unElemento){
+	public Luciernaga(String unId, HashMap<Character, Integer> unElemento){
 		this.id = unId;
 		this.elementos = unElemento;
 	}
@@ -24,11 +25,11 @@ public class Luciernaga implements IComportamiento{
 		return id;
 	}
 
-	public void setElementos(ArrayList<Character> unElemento){
+	public void setElementos(HashMap<Character, Integer> unElemento){
 		this.elementos = unElemento;
 	}
 	
-	public ArrayList<Character> getElementos(){
+	public HashMap<Character, Integer> getElementos(){
 		return elementos;
 	}
 	
@@ -38,7 +39,7 @@ public class Luciernaga implements IComportamiento{
 		int intensidad = 0;
 		int peso = 1;
 		for (int i=0; i < operador1.length; i++){
-			intensidad = intensidad + ((elementos.indexOf(operador1[i]) + elementos.indexOf(operador2[i])-elementos.indexOf(resultado[i]))*peso);
+			intensidad = intensidad + ((elementos.get(operador1[i]) + elementos.get(operador2[i])-elementos.get(resultado[i]))*peso);
 			peso = peso*10;
 		}
 		if(operador1.length < resultado.length){
@@ -49,14 +50,31 @@ public class Luciernaga implements IComportamiento{
 
 	@Override
 	public boolean atractivo(Luciernaga unaLuciernaga, char[] operador1, char[] operador2, char[] resultado) {
-		// TODO Auto-generated method stub
-		return true;
+		if (Math.abs(this.intensidad(operador1, operador2, resultado)) <= Math.abs(unaLuciernaga.intensidad(operador1, operador2, resultado))){
+			return true; //movimiento aleatorio
+		}else{
+			return false;//movimiento hacia la luciernaga que comparo
+		}
 	}
 
 	@Override
-	public void desplazamiento() {
-		// TODO Auto-generated method stub
-		
+	public void desplazamiento(char[] unOperador) {
+		for(char unChar:unOperador){
+			elementos.remove(unChar);
+		}
+		Random unRandom = new Random();
+		for(char unChar:unOperador){
+			int aleatorio = unRandom.nextInt(10);
+			while(elementos.containsValue(aleatorio)){
+				aleatorio = unRandom.nextInt(10);
+			}
+			elementos.put(unChar,aleatorio);
+		}
 	}
 
+	@Override
+	public void desplazamiento(Luciernaga unaLuciernaga){
+		// TODO Auto-generated method stub
+	}
+	
 }
