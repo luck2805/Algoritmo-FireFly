@@ -2,6 +2,8 @@ package model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Random;
 
 import interfaces.IComportamiento;
@@ -10,11 +12,13 @@ public class Luciernaga implements IComportamiento{
 
 	public String id;
 	public HashMap<Character, Integer> elementos;
+	public HashMap<Character, Integer> auxiliar;
 	public Luciernaga(){}
 	
 	public Luciernaga(String unId, HashMap<Character, Integer> unElemento){
 		this.id = unId;
 		this.elementos = unElemento;
+		this.auxiliar = new HashMap<Character,Integer>();
 	}
 	
 	public void setId(String unId){
@@ -58,23 +62,87 @@ public class Luciernaga implements IComportamiento{
 	}
 
 	@Override
-	public void desplazamiento(char[] unOperador) {
-		for(char unChar:unOperador){
-			elementos.remove(unChar);
+	public void desplazamiento(Luciernaga unaLuciernaga) {
+		Random valor = new Random();
+		int unNumero = valor.nextInt(10);
+		while(!this.elementos.containsValue(unNumero)){
+			unNumero = valor.nextInt(10);
 		}
-		Random unRandom = new Random();
-		for(char unChar:unOperador){
-			int aleatorio = unRandom.nextInt(10);
-			while(elementos.containsValue(aleatorio)){
-				aleatorio = unRandom.nextInt(10);
+		
+		boolean bandera = true;
+		while (bandera){
+			char caracter = obtenerCaracter(this.elementos, unNumero);
+			if(caracter != '-'){
+				permutar(unaLuciernaga.elementos, caracter, unNumero);
+				unNumero = unaLuciernaga.elementos.get(caracter);
+			}else{
+				bandera = false;
 			}
-			elementos.put(unChar,aleatorio);
+		}
+		
+		if(!auxiliar.isEmpty()){
+			Iterator it = auxiliar.entrySet().iterator();
+			while(it.hasNext()){
+				Map.Entry e = (Map.Entry)it.next();
+				elementos.put((char)e.getKey(), (int)e.getValue());
+			}
+		}
+
+		Iterator it2 = elementos.entrySet().iterator();
+		while(it2.hasNext()){
+			Map.Entry e1 = (Map.Entry)it2.next();
+			//System.out.println(e1.getKey() + " - " + e1.getValue());
 		}
 	}
 
-	@Override
-	public void desplazamiento(Luciernaga unaLuciernaga){
-		// TODO Auto-generated method stub
+	private char obtenerCaracter(HashMap<Character,Integer> unDiccionario, int unValor){
+		Iterator it = unDiccionario.entrySet().iterator();
+		char unaLetra = '-';
+		while(it.hasNext()){
+			Map.Entry e = (Map.Entry)it.next();
+			if(unValor == (int)e.getValue()){
+				unaLetra =  (char)e.getKey();
+				break;
+			}
+		}
+		return unaLetra;
+	}
+	
+	private void eliminar(char unChar, int unInt){
+		elementos.remove(unChar, unInt);
+	}
+	
+	private void insertar(char unChar, int unInt){
+		auxiliar.put(unChar, unInt);
+	}
+	
+	private void permutar(HashMap<Character,Integer> mejor, char unChar, int unInt){
+		insertar(unChar, (int)mejor.get(unChar));
+		eliminar(unChar, elementos.get(unChar));
+	}
+	
+	public void alfaStep(){
+		Random valor = new Random();
+		boolean bandera = true;
+		int unValor = 9999;
+		//Encontrar un numero aleatorio que exista
+		while(bandera){
+			unValor = valor.nextInt(10);
+			if(elementos.containsValue(unValor)){
+				bandera = false;
+			}
+		}
+		//Encontrar la letra de ese numero aleatorio que existe
+		char unCar = obtenerCaracter(this.elementos, unValor);
+		boolean bandera2 = true;
+		//Encontrar un vlaor que no exista para la letra 
+		while (bandera2){
+			unValor = valor.nextInt(10);
+			if(!elementos.containsValue(unValor)){
+				bandera2 = false;
+			}
+		}
+		
 	}
 	
 }

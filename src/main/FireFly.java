@@ -40,18 +40,12 @@ public class FireFly {
 			for (int j=0; j < swarm.length; j++){
 				if ((i!=j)&&(swarm[i].intensidad(sumando1, sumando2, total)!=0)){
 					if (swarm[i].atractivo(swarm[j], sumando1, sumando2, total)){
-						if(swarm[i].intensidad(sumando1, sumando2, total)>0){
-							//decrementar operadores
-						}else{
-						//decremento total
-						}
+						//movimiento aleatorio
+						swarm[i].alfaStep();
 					}else{
-						if(swarm[i].intensidad(sumando1, sumando2, total)>0){
-							//los mejores valores de los operadores de j le asigno a i
-						}else{
-							//los mejores valores de los resultados de j le asigno a i
-						}
-						
+						//acercar luciernaga i a j
+						swarm[i].desplazamiento(swarm[j]);
+						swarm[i].alfaStep();
 					}
 				}
 			}
