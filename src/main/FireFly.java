@@ -13,6 +13,13 @@ public class FireFly {
 	public static void main(String[] args) {
 		
 //Entrada del problema		
+		//Ventana ventana=new Ventana();
+		//ventana.setBounds(0,0,450,350);
+		//ventana.setVisible(true);
+		//ventana.setResizable(false);
+		//String operador1 = ventana.getOperador();
+		//String operador2 = ventana.getOperador2();
+		//String resultado = ventana.getOperador3();
 		String operador1 = getOperador();
 		String operador2 = getOperador();
 		String resultado = getOperador();
@@ -32,20 +39,23 @@ public class FireFly {
 	    //verLetras(letras);
 		    		
 //Creación de la poblacion de luciernagas		
-		Luciernaga[] swarm = poblacion(50,letras);
+		Luciernaga[] swarm = poblacion(1000,letras);
 
 		
 //Comparar luciernagas teniendo en cuenta el brillo y el atractivo de cada una
 		for (int i=0; i < swarm.length; i++){
 			for (int j=0; j < swarm.length; j++){
 				if ((i!=j)&&(swarm[i].intensidad(sumando1, sumando2, total)!=0)){
+					swarm[i].setIteracion(1);
 					if (swarm[i].atractivo(swarm[j], sumando1, sumando2, total)){
 						//movimiento aleatorio
 						swarm[i].alfaStep();
 					}else{
 						//acercar luciernaga i a j
 						swarm[i].desplazamiento(swarm[j]);
-						swarm[i].alfaStep();
+						if(swarm[i].intensidad(sumando1, sumando2, total)!=0){
+							swarm[i].alfaStep();
+						}
 					}
 				}
 			}
@@ -58,10 +68,12 @@ public class FireFly {
 			verLetras(swarm[z].elementos);
 		}
 		
-		Ventana ventana=new Ventana();
-		ventana.setBounds(0,0,450,350);
-		ventana.setVisible(true);
-		ventana.setResizable(false);
+//		Ventana ventana=new Ventana();
+	//	ventana.setBounds(0,0,450,350);
+		//ventana.setVisible(true);
+		//ventana.setResizable(false);
+	
+		resultados(swarm, sumando1, sumando2, total);
 		
 	}
 
@@ -138,6 +150,17 @@ public class FireFly {
 			resultado.add(unChar);
 		}
 		return resultado;
+	}
+	
+	public static void resultados(Luciernaga[] unEnjambre, char[] operador1, char[] operador2, char[] resultado){
+		int cont = 0;
+		for (Luciernaga unaLuciernaga:unEnjambre){
+			if (unaLuciernaga.intensidad(operador1, operador2, resultado) == 0){
+				cont++;
+				System.out.println(unaLuciernaga.toString() + " Iteracion: " + unaLuciernaga.getIteracion());
+			}
+		}
+		System.out.println("Luciernagas optimas: " + cont);
 	}
 
 }

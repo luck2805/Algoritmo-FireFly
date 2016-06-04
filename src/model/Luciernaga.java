@@ -13,14 +13,24 @@ public class Luciernaga implements IComportamiento{
 	public String id;
 	public HashMap<Character, Integer> elementos;
 	public HashMap<Character, Integer> auxiliar;
+	public int iteracion;
 	public Luciernaga(){}
 	
 	public Luciernaga(String unId, HashMap<Character, Integer> unElemento){
 		this.id = unId;
 		this.elementos = unElemento;
 		this.auxiliar = new HashMap<Character,Integer>();
+		this.iteracion = 0;
 	}
 	
+	public int getIteracion() {
+		return iteracion;
+	}
+
+	public void setIteracion(int iteracion) {
+		this.iteracion = this.iteracion + iteracion;
+	}
+
 	public void setId(String unId){
 		this.id = unId;
 	}
@@ -108,19 +118,7 @@ public class Luciernaga implements IComportamiento{
 		return unaLetra;
 	}
 	
-	private void eliminar(char unChar, int unInt){
-		elementos.remove(unChar, unInt);
-	}
-	
-	private void insertar(char unChar, int unInt){
-		auxiliar.put(unChar, unInt);
-	}
-	
-	private void permutar(HashMap<Character,Integer> mejor, char unChar, int unInt){
-		insertar(unChar, (int)mejor.get(unChar));
-		eliminar(unChar, elementos.get(unChar));
-	}
-	
+//Alfa-Step
 	public void alfaStep(){
 		Random valor = new Random();
 		boolean bandera = true;
@@ -143,6 +141,29 @@ public class Luciernaga implements IComportamiento{
 			}
 		}
 		
+	}
+		
+	private void permutar(HashMap<Character,Integer> mejor, char unChar, int unInt){
+		insertar(unChar, (int)mejor.get(unChar));
+		eliminar(unChar, elementos.get(unChar));
+	}
+	
+	private void eliminar(char unChar, int unInt){
+		elementos.remove(unChar, unInt);
+	}
+	
+	private void insertar(char unChar, int unInt){
+		auxiliar.put(unChar, unInt);
+	}
+	
+	public String toString(){
+		String resultado = " ";
+		Iterator it = elementos.entrySet().iterator();
+		while(it.hasNext()){
+			Map.Entry e = (Map.Entry)it.next();
+			resultado = resultado + e.getKey() + ":" + e.getValue() + " ";
+		}
+		return resultado;
 	}
 	
 }
