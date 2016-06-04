@@ -39,22 +39,26 @@ public class FireFly {
 	    //verLetras(letras);
 		    		
 //Creación de la poblacion de luciernagas		
-		Luciernaga[] swarm = poblacion(1000,letras);
+		Luciernaga[] swarm = poblacion(50,letras);
 
 		
 //Comparar luciernagas teniendo en cuenta el brillo y el atractivo de cada una
-		for (int i=0; i < swarm.length; i++){
-			for (int j=0; j < swarm.length; j++){
-				if ((i!=j)&&(swarm[i].intensidad(sumando1, sumando2, total)!=0)){
-					swarm[i].setIteracion(1);
-					if (swarm[i].atractivo(swarm[j], sumando1, sumando2, total)){
-						//movimiento aleatorio
-						swarm[i].alfaStep();
-					}else{
-						//acercar luciernaga i a j
-						swarm[i].desplazamiento(swarm[j]);
-						if(swarm[i].intensidad(sumando1, sumando2, total)!=0){
+		int iteraciones = 0;
+		while(iteraciones <100){
+			iteraciones++;
+			for (int i=0; i < swarm.length; i++){
+				for (int j=0; j < swarm.length; j++){
+					if ((i!=j)&&(swarm[i].intensidad(sumando1, sumando2, total)!=0)){
+						swarm[i].setIteracion(1);
+						if (swarm[i].atractivo(swarm[j], sumando1, sumando2, total)){
+							//movimiento aleatorio
 							swarm[i].alfaStep();
+						}else{
+							//acercar luciernaga i a j
+							swarm[i].desplazamiento(swarm[j]);
+							if(swarm[i].intensidad(sumando1, sumando2, total)!=0){
+								swarm[i].alfaStep();
+							}
 						}
 					}
 				}
@@ -62,12 +66,12 @@ public class FireFly {
 		}
 
 //Mostrar el valor de todas las luciernagas al finalizar todo
-		for(int z = 0 ; z < swarm.length ; z++){
+/*		for(int z = 0 ; z < swarm.length ; z++){
 			System.out.println(swarm[z].id);
 			System.out.println(swarm[z].intensidad(sumando1, sumando2, total));
 			verLetras(swarm[z].elementos);
 		}
-		
+*/		
 //		Ventana ventana=new Ventana();
 	//	ventana.setBounds(0,0,450,350);
 		//ventana.setVisible(true);
@@ -109,7 +113,6 @@ public class FireFly {
 		HashMap<Character, Integer> mapeador = new HashMap<Character,Integer>();
 		Random valor = new Random();
 	    Iterator it = checkSum.entrySet().iterator();
-	    System.out.println("Esta es una Luciernaga");
 	    while (it.hasNext()) {
 	    	Map.Entry e = (Map.Entry)it.next();
 			int valorcito = valor.nextInt(10);
@@ -119,7 +122,8 @@ public class FireFly {
 			mapeador.put((char)e.getKey(), valorcito);			
 	    }
 //Solo para ver como se fueron asignador las letras a las posiciones
-	    verLetras(mapeador);		
+	    //System.out.println("Esta es una Luciernaga");
+	    //verLetras(mapeador);		
 		return mapeador; 
 	}
 	
@@ -157,7 +161,7 @@ public class FireFly {
 		for (Luciernaga unaLuciernaga:unEnjambre){
 			if (unaLuciernaga.intensidad(operador1, operador2, resultado) == 0){
 				cont++;
-				System.out.println(unaLuciernaga.toString() + " Iteracion: " + unaLuciernaga.getIteracion());
+				System.out.println(unaLuciernaga.toString() + " Iteracion: " + unaLuciernaga.getIteracion() + " " + unaLuciernaga.id);
 			}
 		}
 		System.out.println("Luciernagas optimas: " + cont);
